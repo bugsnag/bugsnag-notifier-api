@@ -135,13 +135,13 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 }
 ```
 
-Bugsnag Libraries
+Bugsnag Plugins
 ---------------------------
-When writing a library for other Bugsnag users, it is important to try and get a consistent interface across various platforms, so that developers get used
+When writing a plugin for other Bugsnag users, it is important to try and get a consistent interface across various platforms, so that developers get used
 to the Bugsnag interface.
 
 ### Configuration
-On startup, a Bugsnag notifier should request the following configuration values from the developer.
+On startup, a Bugsnag plugin should request the following configuration values from the developer.
 
 - **API Key** - The apiKey for the project.
 - **Release Stage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
@@ -151,13 +151,16 @@ This should default to notifying for the "production" release stage only.
 - **Use SSL** - If this is true, the plugin should notify Bugsnag using the SSL endpoint. This should default to false.
 - **Endpoint** - This should default to notify.bugsnag.com and informs the plugin where to post notifications to.
 
-When running a Bugsnag notifier plugin should provide the following run time properties.
+When running a Bugsnag plugin should provide the following run time properties.
 
 - **User ID** - The current user using the application. This should use a sensible default. Some platforms, especially web platforms, provide a mechanism
 for ascertaining who the current user is, and if this is available the plugin should use it.
 - **Extra Data** - Any extra data that will be sent as meta data with the request. Plugins should configure sensible defaults for meta data this based on 
 their own platform. Users may provide a lambda function or equivalent to supplement this metadata when an error occurs.
 - **Context** - Set the context that is currently active in the application. This should default to a sensible approximation if the platform allows.
+
+Once you have finished your plugin, get in touch with [Bugsnag](mailto:founders@bugsnag.com) and we will add it to our list to make it easy for other
+developers to find your plugin.
 
 Response Codes
 ---------------------------
