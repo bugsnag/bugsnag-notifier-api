@@ -7,6 +7,13 @@ in several languages.
 If there is no plugin available in the language you are using, then why not write one yourself? We will gladly feature your plugin within Bugsnag when someone
 creates an appropriate project.
 
+What is Bugsnag?
+----------------
+
+[Bugsnag](http://bugsnag.com) captures errors in real-time from your web, 
+mobile and desktop applications, helping you to understand and resolve them 
+as fast as possible. [Create a free account](http://bugsnag.com).
+
 Notification Methods
 --------------------
 
