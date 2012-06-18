@@ -1,4 +1,4 @@
-Overview
+Bugsnag API
 -----------
 
 The Bugsnag API is used to notify Bugsnag of an error or exception in an application. [Official libraries](https://github.com/organizations/bugsnag) are available
