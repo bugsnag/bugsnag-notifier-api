@@ -1,5 +1,5 @@
 Bugsnag Notifier API
------------
+====================
 
 The Bugsnag Notifier API is used to notify Bugsnag of an error or exception in an application. [Official libraries](https://github.com/organizations/bugsnag) are available
 in several languages.
@@ -7,12 +7,14 @@ in several languages.
 If there is no plugin available in the language you are using, then why not write one yourself? We will gladly feature your plugin within Bugsnag when someone
 creates an appropriate project.
 
+
 What is Bugsnag?
 ----------------
 
 [Bugsnag](http://bugsnag.com) captures errors in real-time from your web, 
 mobile and desktop applications, helping you to understand and resolve them 
 as fast as possible. [Create a free account](http://bugsnag.com).
+
 
 Notification Methods
 --------------------
@@ -22,6 +24,7 @@ process the error.
 
 A plugin can notify Bugsnag of an error at [http://notify.bugsnag.com](http://notify.bugsnag.com) using http. The plugin should also be capable of notifying Bugsnag using SSL
 at [https://notify.bugsnag.com](https://notify.bugsnag.com).
+
 
 JSON Payload
 --------------------
@@ -142,6 +145,7 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 }
 ```
 
+
 Bugsnag Plugins
 ---------------------------
 When writing a plugin for other Bugsnag users, it is important to try and get a consistent interface across various platforms, so that developers get used
@@ -168,6 +172,7 @@ their own platform. Users may provide a lambda function or equivalent to supplem
 
 Once you have finished your plugin, get in touch with [Bugsnag](mailto:founders@bugsnag.com) and we will add it to our list to make it easy for other
 developers to find your plugin.
+
 
 Response Codes
 ---------------------------
