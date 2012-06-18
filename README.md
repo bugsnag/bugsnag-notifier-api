@@ -1,18 +1,20 @@
-Bugsnag API
+Bugsnag Notifier API
 -----------
 
-The Bugsnag API is used to notify Bugsnag of an error or exception in an application. [Official libraries](https://github.com/organizations/bugsnag) are available
+The Bugsnag Notifier API is used to notify Bugsnag of an error or exception in an application. [Official libraries](https://github.com/organizations/bugsnag) are available
 in several languages.
 
-If there is no plugin available in the language you are using, you can manually notify Bugsnag using the following API.
+If there is no plugin available in the language you are using, then why not write one yourself? We will gladly feature your plugin within Bugsnag when someone
+creates an appropriate project.
 
 Notification Methods
 --------------------
 
-Bugsnag uses a simple JSON based API to notify the service of an error. Simply POST the JSON to [http://notify.bugsnag.com](http://notify.bugsnag.com) and Bugsnag will process your error.
+Bugsnag uses a simple JSON based API to notify the service of an error. Simply POST the JSON to [http://notify.bugsnag.com](http://notify.bugsnag.com) and Bugsnag will 
+process the error.
 
-You can notify Bugsnag of an error at [http://notify.bugsnag.com](http://notify.bugsnag.com) using http. If you require the extra security, you can also notify
-[https://notify.bugsnag.com](https://notify.bugsnag.com) to enable ssl.
+A plugin can notify Bugsnag of an error at [http://notify.bugsnag.com](http://notify.bugsnag.com) using http. The plugin should also be capable of notifying Bugsnag using SSL
+at [https://notify.bugsnag.com](https://notify.bugsnag.com).
 
 JSON Payload
 --------------------
@@ -135,11 +137,11 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 
 Bugsnag Libraries
 ---------------------------
-When writing a library for other Bugsnag users, it is important to try and get a consistent interface across various clients, so that Bugsnag
-has a consistent interface.
+When writing a library for other Bugsnag users, it is important to try and get a consistent interface across various platforms, so that developers get used
+to the Bugsnag interface.
 
 ### Configuration
-On startup, a Bugsnag notifier should request the following configuration values.
+On startup, a Bugsnag notifier should request the following configuration values from the developer.
 
 - **API Key** - The apiKey for the project.
 - **Release Stage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
