@@ -21,7 +21,7 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 
 ```javascript
 {
-    // The API Key associated with the project. Informs Bugsnag which project has generated this error
+    // The API Key associated with the project. Informs Bugsnag which project has generated this error.
     apiKey: "c9d60ae4c7e70c4b6c4ebd3e8056d2b8",
 
     // This object describes the notifier itself. These properties are used within Bugsnag to track error 
@@ -132,6 +132,30 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
     }]
 }
 ```
+
+Bugsnag Libraries
+---------------------------
+When writing a library for other Bugsnag users, it is important to try and get a consistent interface across various clients, so that Bugsnag
+has a consistent interface.
+
+### Configuration
+On startup, a Bugsnag notifier should request the following configuration values.
+
+- **APIKey** - The apiKey for the project.
+- **releaseStage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
+- **notifyReleaseStages** - A list of stages that notifications should succeed for. If the current release stage is not in this list, any notify should be blocked by the client.
+This should default to notifying for the "production" release stage only.
+- **autoNotify** - If this is true, the plugin should notify Bugsnag of any uncaught exceptions. This should default to true.
+- **useSSL** - If this is true, the plugin should notify Bugsnag using the SSL endpoint. This should default to false.
+- **endpoint** - This should default to notify.bugsnag.com and informs the plugin where to post notifications to.
+
+When running a Bugsnag notifier plugin should provide the following run time properties.
+
+- **userId** - The current user using the application. This should use a sensible default. Some platforms, especially web platforms, provide a mechanism
+for ascertaining who the current user is, and if this is available the plugin should use it.
+- **extraData** - Any extra data that will be sent as meta data with the request. Plugins should configure sensible defaults for meta data this based on 
+their own platform. Users may provide a lambda function or equivalent to supplement this metadata when an error occurs.
+- **context** - Set the context that is currently active in the application. This should default to a sensible approximation if the platform allows.
 
 Response Codes
 ---------------------------
