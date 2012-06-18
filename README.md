@@ -46,16 +46,16 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
     events: [{
         
         // A unique identifier for a user affected by this event. This could be any distinct identifier
-        // that makes sense for your application/platform. (optional)
+        // that makes sense for your application/platform. (optional, default none)
         userId: "snmaynard",
 
-        // The version number of the application which generated the error. (optional)
+        // The version number of the application which generated the error. (optional, default none)
         appVersion: "1.1.3",
 
         // The release stage that this error occurred in. This can be any
         // value, but "production" will be highlighted differently in
         // bugsnag in the future, so please use "production" appropriately.
-        releaseStage: "release",
+        releaseStage: "production",
 
         // A string representing what was happening in the application at the time of the error. 
         // This string could be used for grouping purposes, depending on the event itself.
@@ -77,10 +77,10 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
             // The class of error that occurred. This field is used to group the errors together 
             // so should not contain any contextual information that would prevent correct grouping. 
             // This would ordinarily be the Exception name when dealing with an exception.
-            errorClass: "NullPointerException",
+            errorClass: "NoMethodError",
     
             // The error message associated with the error. Usually this will contain some information
-            // about this specific instance of the error and is not used to group the errors (optional).
+            // about this specific instance of the error and is not used to group the errors (optional, default none).
             errorMessage: "Unable to connect to database.",
     
             // An array of stackframe objects. Tells Bugsnag what was happening within the application at
@@ -141,21 +141,21 @@ has a consistent interface.
 ### Configuration
 On startup, a Bugsnag notifier should request the following configuration values.
 
-- **APIKey** - The apiKey for the project.
-- **releaseStage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
-- **notifyReleaseStages** - A list of stages that notifications should succeed for. If the current release stage is not in this list, any notify should be blocked by the client.
+- **API Key** - The apiKey for the project.
+- **Release Stage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
+- **Notify Release Stages** - A list of stages that notifications should succeed for. If the current release stage is not in this list, any notify should be blocked by the client.
 This should default to notifying for the "production" release stage only.
-- **autoNotify** - If this is true, the plugin should notify Bugsnag of any uncaught exceptions. This should default to true.
-- **useSSL** - If this is true, the plugin should notify Bugsnag using the SSL endpoint. This should default to false.
-- **endpoint** - This should default to notify.bugsnag.com and informs the plugin where to post notifications to.
+- **Auto Notify** - If this is true, the plugin should notify Bugsnag of any uncaught exceptions. This should default to true.
+- **Use SSL** - If this is true, the plugin should notify Bugsnag using the SSL endpoint. This should default to false.
+- **Endpoint** - This should default to notify.bugsnag.com and informs the plugin where to post notifications to.
 
 When running a Bugsnag notifier plugin should provide the following run time properties.
 
-- **userId** - The current user using the application. This should use a sensible default. Some platforms, especially web platforms, provide a mechanism
+- **User ID** - The current user using the application. This should use a sensible default. Some platforms, especially web platforms, provide a mechanism
 for ascertaining who the current user is, and if this is available the plugin should use it.
-- **extraData** - Any extra data that will be sent as meta data with the request. Plugins should configure sensible defaults for meta data this based on 
+- **Extra Data** - Any extra data that will be sent as meta data with the request. Plugins should configure sensible defaults for meta data this based on 
 their own platform. Users may provide a lambda function or equivalent to supplement this metadata when an error occurs.
-- **context** - Set the context that is currently active in the application. This should default to a sensible approximation if the platform allows.
+- **Context** - Set the context that is currently active in the application. This should default to a sensible approximation if the platform allows.
 
 Response Codes
 ---------------------------
