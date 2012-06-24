@@ -1,11 +1,16 @@
 Bugsnag Notifier API
 ====================
 
-The Bugsnag Notifier API is used to notify Bugsnag of an error or exception in an application. [Official libraries](https://github.com/organizations/bugsnag) are available
-in several languages.
+The Bugsnag Notifier API can be used to notify Bugsnag of an error or 
+exception in web, mobile or desktop applications.
+[Official notifiers](https://github.com/organizations/bugsnag) are available 
+for several languages and frameworks.
 
-If there is no plugin available in the language you are using, then why not write one yourself? We will gladly feature your plugin within Bugsnag when someone
-creates an appropriate project.
+If there is no notifier available for the language or framework you are using,
+then why not write one yourself? Email us at 
+[notifiers@bugsnag.com](mailto:notifiers@bugsnag.com) to let us know about 
+your new notifier, and we will make it available to other Bugsnag users. We 
+will even give you special Bugsnag perks to say thank you!
 
 
 What is Bugsnag?
@@ -16,20 +21,53 @@ mobile and desktop applications, helping you to understand and resolve them
 as fast as possible. [Create a free account](http://bugsnag.com).
 
 
-Notification Methods
---------------------
+API Overview
+------------
 
-Bugsnag uses a simple JSON based API to notify the service of an error. Simply POST the JSON to [http://notify.bugsnag.com](http://notify.bugsnag.com) and Bugsnag will 
-process the error.
+Bugsnag provides a simple JSON based API to notify us of errors. Simply
+POST the [JSON Payload](#json-payload) to [http://notify.bugsnag.com](http://notify.bugsnag.com)
+and Bugsnag will process the error.
 
-A plugin can notify Bugsnag of an error at [http://notify.bugsnag.com](http://notify.bugsnag.com) using http. The plugin should also be capable of notifying Bugsnag using SSL
-at [https://notify.bugsnag.com](https://notify.bugsnag.com).
+It is recommended you make it possible to post errors over HTTPS, in which case
+you should POST to [https://notify.bugsnag.com](https://notify.bugsnag.com).
+
+Make sure you set the HTTP `Content-Type` header to be `application/json`.
+
+
+Response Codes
+--------------
+
+We use standard HTTP response codes to let you know if your JSON Payload was 
+processed sucessfully. For non-200 response codes, we will also include a JSON
+response with details of any error that occurred. Bugsnag will send one of the
+following response code:
+
+-   **200 (OK)**
+
+    The error validated and will be processed.
+
+-   **400 (Bad Request)**
+
+    The payload failed syntax validation and was not processed.
+
+-   **401 (Unauthorized)**
+
+    Indicates that the API Key was incorrect.
+
+-   **413 (Request Too Large)**
+    
+    Indicates that the payload was too large to be processed.
+
+-   **429 (Too Many Requests)**
+
+    Indicates that the payload was not processed due to rate limiting.
 
 
 JSON Payload
---------------------
+------------
 
-Here is the standard JSON payload for a notice to Bugsnag that an error has occurred in an application.
+Here is the JSON payload for a notice to Bugsnag that an error has occurred in an application.
+All fields are required, unless otherwise stated.
 
 ```javascript
 {
@@ -50,27 +88,24 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
         url: "https://github.com/bugsnag/bugsnag-ruby"
     },
 
-    // An array of events that have occurred and Bugsnag should be notified of. A notifier can choose to group 
-    // notices into an array to minimize network traffic, or can notify Bugsnag each time an event occurs. Each 
-    // individual event within the array is subject to the projects throttling controls, so it is possible that not
-    // all of the events included in the array will be processed successfully, if some of the events cause
-    // the project to hit its rate limit.
+    // An array of error events that Bugsnag should be notified of. A notifier can choose to group 
+    // notices into an array to minimize network traffic, or can notify Bugsnag each time an event occurs. 
     events: [{
         
         // A unique identifier for a user affected by this event. This could be any distinct identifier
-        // that makes sense for your application/platform. (optional, default none)
+        // that makes sense for your application/platform. This field is optional but highly recommended.
         userId: "snmaynard",
 
         // The version number of the application which generated the error. (optional, default none)
         appVersion: "1.1.3",
 
-        // The release stage that this error occurred in. This can be any
-        // value, but "production" will be highlighted differently in
-        // bugsnag in the future, so please use "production" appropriately.
+        // The release stage that this error occurred in, for example "development" or "production".
+        // This can be any string, but "production" will be highlighted differently in bugsnag in the future,
+        // so please use "production" appropriately.
         releaseStage: "production",
 
         // A string representing what was happening in the application at the time of the error. 
-        // This string could be used for grouping purposes, depending on the event itself.
+        // This string could be used for grouping purposes, depending on the event.
         // Usually this would represent the controller and action in a server based project. 
         // It could represent the screen that the user was interacting with in a client side project.
         // For example,
@@ -80,10 +115,9 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
         context: "auth/session#create",
 
         // An array of exceptions that occurred during this event. Most of the time there will 
-        // only be one exception, but some languages support wrapping exceptions
-        // in other exceptions, which can pollute the stacktrace. The exceptions should be 
-        // unwrapped and put into the array one at a time. The first exception raised
-        // should be first in this array.
+        // only be one exception, but some languages support "nested" or "caused by" exceptions.
+        // In this case, exceptions should be unwrapped and added to the array one at a time.
+        // The first exception raised should be first in this array.
         exceptions: [{
     
             // The class of error that occurred. This field is used to group the errors together 
@@ -95,12 +129,12 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
             // about this specific instance of the error and is not used to group the errors (optional, default none).
             errorMessage: "Unable to connect to database.",
     
-            // An array of stackframe objects. Tells Bugsnag what was happening within the application at
-            // the time of the error and is shown to the developer, as well
-            // as being used to group the error.
+            // An array of stacktrace objects. Each object represents one line in the exception's stacktrace.
+            // Bugsnag uses this information to help with error grouping, as well as displaying it to the user.
             stacktrace: [{
                 
                 // The file that this stack frame was executing.
+                // It is recommended that you strip any unnecessary information from the beginning of the path.
                 file: "controllers/auth/session_controller.rb",
         
                 // The line of the file that this frame of the stack was in.
@@ -109,18 +143,18 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
                 // The method that this particular stack frame is within.
                 method: "create",
         
-                // If the stack frame is in the users project set this to true (optional, default false).
+                // Is this stacktrace line is in the user's project code, set this to true.
                 // It is useful for developers to be able to see which lines of a stacktrace are within their own
                 // application, and which are within third party libraries. This boolean field allows Bugsnag 
-                // to display this information in the stacktrace as well as use the
-                // information to help group errors better.
+                // to display this information in the stacktrace as well as use the information to help group 
+                // errors better. (Optional, defaults to false).
                 inProject: true
             }]
         }],
 
-        // A hash containing any further data you wish to accompany the payload. 
-        // This ordinarily will contain multiple hashes, with each hash included being
-        // displayed as a tab within the event details on the Bugsnag website (optional).
+        // An object containing any further data you wish to attach to this error event.
+        // This should contain one or more objects, with each object being displayed in its
+        // own tab on the event details on the Bugsnag website. (Optional).
         metaData: {
             
             // This will displayed as the first tab after the stacktrace on the Bugsnag website.
@@ -146,40 +180,73 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 ```
 
 
-Bugsnag Plugins
----------------------------
-When writing a plugin for other Bugsnag users, it is important to try and get a consistent interface across various platforms, so that developers get used
-to the Bugsnag interface.
+Notifier Configuration
+----------------------
 
-### Configuration
-On startup, a Bugsnag plugin should request the following configuration values from the developer.
+When writing a notifier, you should consider providing methods to allow users
+to configure how errors are sent to bugsnag.
 
-- **API Key** - The apiKey for the project.
-- **Release Stage** - The release stage for the current deployment. Most platforms have a sensible way of obtaining this, and this should be used if possible.
-- **Notify Release Stages** - A list of stages that notifications should succeed for. If the current release stage is not in this list, any notify should be blocked by the client.
-This should default to notifying for the "production" release stage only.
-- **Auto Notify** - If this is true, the plugin should notify Bugsnag of any uncaught exceptions. This should default to true.
-- **Use SSL** - If this is true, the plugin should notify Bugsnag using the SSL endpoint. This should default to false.
-- **Endpoint** - This should default to notify.bugsnag.com and informs the plugin where to post notifications to.
+On our official notifiers, we provide the following interfaces:
 
-When running a Bugsnag plugin should provide the following run time properties.
+### Application Settings
 
-- **User ID** - The current user using the application. This should use a sensible default. Some platforms, especially web platforms, provide a mechanism
-for ascertaining who the current user is, and if this is available the plugin should use it.
-- **Extra Data** - Any extra data that will be sent as meta data with the request. Plugins should configure sensible defaults for meta data this based on 
-their own platform. Users may provide a lambda function or equivalent to supplement this metadata when an error occurs.
-- **Context** - Set the context that is currently active in the application. This should default to a sensible approximation if the platform allows.
+Your Bugsnag notifier should allow users to set the following settings in
+their application.
 
-Once you have finished your plugin, get in touch with [Bugsnag](mailto:founders@bugsnag.com) and we will add it to our list to make it easy for other
-developers to find your plugin.
+-   **apiKey**
+
+    The apiKey for the project, this **must** be provided by the developer.
+    You should send this value in the [JSON Payload](#json-payload).
+
+-   **releaseStage**
+    
+    The current release stage for the application. Most platforms have a
+    sensible automatic way of obtaining this, for example `RAILS_ENV` 
+    in rails apps, and this should be used if possible.
+    You should send this value in the [JSON Payload](#json-payload).
+
+-   **notifyReleaseStages**
+
+    A list of release stages that the notifier will capture and send errors 
+    for. If the current release stage is not in this list, errors should not 
+    be sent to Bugsnag. This should default to notifying for the "production"
+    release stage only.
+
+-   **autoNotify**
+
+    If this is true, the plugin should notify Bugsnag of any uncaught 
+    exceptions (if possible). This should default to true.
+
+-   **useSSL**
+
+    If this is true, the plugin should notify Bugsnag using SSL.
+    This should default to false.
 
 
-Response Codes
----------------------------
-If the payload could not be processed properly, Bugsnag will respond with a response code that indicates what the error was. It will also
-include a JSON payload containing an error string. The response codes can be any of,
+### Per-Session Settings
 
-- **400 Bad Request** - The payload failed syntax validation and was not processed.
-- **401 Unauthorized** - Indicates that the API Key was incorrect.
-- **413 Request Too Large** - Indicates that the payload was too large to be processed.
-- **429 Too Many Requests** - Indicates that the payload was not processed due to rate limiting.
+You should also allow developers to set the following settings on a *per-request*
+or *per-session* basis. These settings allow us to attach meta-data to each 
+error:
+
+-   **userId**
+
+    An ID representing the current application's user. Many platforms have a
+    way to automatically fill this, for example `session` data in rails apps.
+    You could also generate a UUID and store this on the user's device or in
+    their session. Even if you automatically choose a userId, you should 
+    still allow developers to set one themselves.
+    You should send this value in the [JSON Payload](#json-payload).
+
+-   **context**
+
+    Allow the developer to set the context that is currently active in the 
+    application. You should default this to something sensible for the 
+    platform, for example "action#controller" in a rails app.
+    You should send this value in the [JSON Payload](#json-payload).
+
+-   **extraData**
+
+    Allow the developer to set any extra data that will be sent as meta-data 
+    along with every error. You should send this value inside `metaData` 
+    in the [JSON Payload](#json-payload).
