@@ -63,6 +63,10 @@ Here is the standard JSON payload for a notice to Bugsnag that an error has occu
 
         // The version number of the application which generated the error. (optional, default none)
         appVersion: "1.1.3",
+        
+        // The operating system version of the client that the error was generated on. 
+        // (optional, default none)
+        osVersion: "2.1.1",
 
         // The release stage that this error occurred in. This can be any
         // value, but "production" will be highlighted differently in
