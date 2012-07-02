@@ -12,13 +12,10 @@ then why not write one yourself? Email us at
 your new notifier, and we will make it available to other Bugsnag users. We 
 will even give you special Bugsnag perks to say thank you!
 
-
-What is Bugsnag?
-----------------
-
 [Bugsnag](http://bugsnag.com) captures errors in real-time from your web, 
 mobile and desktop applications, helping you to understand and resolve them 
-as fast as possible. [Create a free account](http://bugsnag.com).
+as fast as possible. [Create a free account](http://bugsnag.com) to start 
+capturing exceptions from your applications.
 
 
 API Overview
@@ -66,79 +63,91 @@ following response code:
 JSON Payload
 ------------
 
-Here is the JSON payload for a notice to Bugsnag that an error has occurred in an application.
-All fields are required, unless otherwise stated.
+Here is the JSON payload for a notice to Bugsnag that an error has occurred in 
+an application. All fields are required, unless otherwise stated.
 
 ```javascript
 {
-    // The API Key associated with the project. Informs Bugsnag which project has generated this error.
+    // The API Key associated with the project. Informs Bugsnag which project 
+    // has generated this error.
     apiKey: "c9d60ae4c7e70c4b6c4ebd3e8056d2b8",
 
-    // This object describes the notifier itself. These properties are used within Bugsnag to track error 
-    // rates from a notifier.
+    // This object describes the notifier itself. These properties are used 
+    // within Bugsnag to track error rates from a notifier.
     notifier: {
         
-        // The notifiers name. Used internally within Bugsnag to track error rates from notifiers.
+        // The notifier name
         name: "Bugsnag Ruby",
 
-        // The notifiers current version. Used internally within Bugsnag to track error rates from notifiers.
+        // The notifier's current version
         version: "1.0.11",
 
-        // The URL associated with the notifier.
+        // The URL associated with the notifier
         url: "https://github.com/bugsnag/bugsnag-ruby"
     },
 
-    // An array of error events that Bugsnag should be notified of. A notifier can choose to group 
-    // notices into an array to minimize network traffic, or can notify Bugsnag each time an event occurs. 
+    // An array of error events that Bugsnag should be notified of. A notifier
+    // can choose to group notices into an array to minimize network traffic, or
+    // can notify Bugsnag each time an event occurs. 
     events: [{
         
-        // A unique identifier for a user affected by this event. This could be any distinct identifier
-        // that makes sense for your application/platform. This field is optional but highly recommended.
+        // A unique identifier for a user affected by this event. This could be 
+        // any distinct identifier that makes sense for your application/platform.
+        // This field is optional but highly recommended.
         userId: "snmaynard",
 
-        // The version number of the application which generated the error. (optional, default none)
+        // The version number of the application which generated the error.
+        // (optional, default none)
         appVersion: "1.1.3",
         
-        // The operating system version of the client that the error was generated on. 
-        // (optional, default none)
+        // The operating system version of the client that the error was 
+        // generated on. (optional, default none)
         osVersion: "2.1.1",
 
-        // The release stage that this error occurred in, for example "development" or "production".
-        // This can be any string, but "production" will be highlighted differently in bugsnag in the future,
-        // so please use "production" appropriately.
+        // The release stage that this error occurred in, for example 
+        // "development" or "production". This can be any string, but "production"
+        // will be highlighted differently in bugsnag in the future, so please use
+        // "production" appropriately.
         releaseStage: "production",
 
-        // A string representing what was happening in the application at the time of the error. 
-        // This string could be used for grouping purposes, depending on the event.
-        // Usually this would represent the controller and action in a server based project. 
-        // It could represent the screen that the user was interacting with in a client side project.
+        // A string representing what was happening in the application at the 
+        // time of the error. This string could be used for grouping purposes, 
+        // depending on the event.
+        // Usually this would represent the controller and action in a server 
+        // based project. It could represent the screen that the user was 
+        // interacting with in a client side project.
         // For example,
         //   * On Ruby on Rails the context could be controller#action
         //   * In Android, the context could be the top most Activity.
-        //   * In iOS, the context could be the name of the top most UIViewController.
+        //   * In iOS, the context could be the name of the top most UIViewController
         context: "auth/session#create",
 
-        // An array of exceptions that occurred during this event. Most of the time there will 
-        // only be one exception, but some languages support "nested" or "caused by" exceptions.
-        // In this case, exceptions should be unwrapped and added to the array one at a time.
-        // The first exception raised should be first in this array.
+        // An array of exceptions that occurred during this event. Most of the
+        // time there will only be one exception, but some languages support 
+        // "nested" or "caused by" exceptions. In this case, exceptions should 
+        // be unwrapped and added to the array one at a time. The first exception
+        // raised should be first in this array.
         exceptions: [{
     
-            // The class of error that occurred. This field is used to group the errors together 
-            // so should not contain any contextual information that would prevent correct grouping. 
-            // This would ordinarily be the Exception name when dealing with an exception.
+            // The class of error that occurred. This field is used to group the
+            // errors together so should not contain any contextual information
+            // that would prevent correct grouping. This would ordinarily be the
+            // Exception name when dealing with an exception.
             errorClass: "NoMethodError",
     
-            // The error message associated with the error. Usually this will contain some information
-            // about this specific instance of the error and is not used to group the errors (optional, default none).
+            // The error message associated with the error. Usually this will 
+            // contain some information about this specific instance of the error
+            // and is not used to group the errors (optional, default none).
             errorMessage: "Unable to connect to database.",
     
-            // An array of stacktrace objects. Each object represents one line in the exception's stacktrace.
-            // Bugsnag uses this information to help with error grouping, as well as displaying it to the user.
+            // An array of stacktrace objects. Each object represents one line in
+            // the exception's stacktrace. Bugsnag uses this information to help
+            // with error grouping, as well as displaying it to the user.
             stacktrace: [{
                 
                 // The file that this stack frame was executing.
-                // It is recommended that you strip any unnecessary information from the beginning of the path.
+                // It is recommended that you strip any unnecessary or common
+                // information from the beginning of the path.
                 file: "controllers/auth/session_controller.rb",
         
                 // The line of the file that this frame of the stack was in.
@@ -147,21 +156,25 @@ All fields are required, unless otherwise stated.
                 // The method that this particular stack frame is within.
                 method: "create",
         
-                // Is this stacktrace line is in the user's project code, set this to true.
-                // It is useful for developers to be able to see which lines of a stacktrace are within their own
-                // application, and which are within third party libraries. This boolean field allows Bugsnag 
-                // to display this information in the stacktrace as well as use the information to help group 
-                // errors better. (Optional, defaults to false).
+                // Is this stacktrace line is in the user's project code, set 
+                // this to true. It is useful for developers to be able to see 
+                // which lines of a stacktrace are within their own application, 
+                // and which are within third party libraries. This boolean field
+                // allows Bugsnag to display this information in the stacktrace
+                // as well as use the information to help group errors better.
+                // (Optional, defaults to false).
                 inProject: true
             }]
         }],
 
-        // An object containing any further data you wish to attach to this error event.
-        // This should contain one or more objects, with each object being displayed in its
-        // own tab on the event details on the Bugsnag website. (Optional).
+        // An object containing any further data you wish to attach to this error
+        // event. This should contain one or more objects, with each object being
+        // displayed in its own tab on the event details on the Bugsnag website.
+        // (Optional).
         metaData: {
             
-            // This will displayed as the first tab after the stacktrace on the Bugsnag website.
+            // This will displayed as the first tab after the stacktrace on the
+            // Bugsnag website.
             someData: {
 
                 // A key value pair that will be displayed in the first tab
