@@ -3,7 +3,7 @@ Bugsnag Notifier API
 
 The Bugsnag Notifier API can be used to notify Bugsnag of an error or 
 exception in web, mobile or desktop applications.
-[Official notifiers](https://github.com/organizations/bugsnag) are available 
+[Official notifiers](https://bugsnag.com/docs/notifiers) are available 
 for several languages and frameworks.
 
 If there is no notifier available for the language or framework you are using,
