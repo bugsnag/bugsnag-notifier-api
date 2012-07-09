@@ -138,7 +138,7 @@ an application. All fields are required, unless otherwise stated.
             // The error message associated with the error. Usually this will 
             // contain some information about this specific instance of the error
             // and is not used to group the errors (optional, default none).
-            errorMessage: "Unable to connect to database.",
+            message: "Unable to connect to database.",
     
             // An array of stacktrace objects. Each object represents one line in
             // the exception's stacktrace. Bugsnag uses this information to help
