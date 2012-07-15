@@ -34,30 +34,34 @@ You can post the following fields when notifying Bugsnag of a deploy:
 -   **apiKey**
 
     The API Key associated with the project. Informs Bugsnag which project 
-    has been deployed.
-    
-    This is the only required field.
+    has been deployed. This is the only required field.
 
--   **appVersion**
-
-    The app version representing this deploy. If you tag every deploy with a 
-    version, send this version number here, otherwise you can send the 
-    revision number from your source control system.
-
-    *Optional, defaults to a unix timestamp representing the current time.*
-    
 -   **releaseStage**
 
-    The release stage for this deploy, eg. "production".
-    
-    *Optional, defaults to "production".*
+    The release stage (eg, production, staging) currently being deployed.
+    (Optional, defaults to "production").
 
 -   **repository**
 
-    The url to the respository containing your source code. We can use this to
-    link directly to your source code from the Bugsnag dashboard.
+    The url to the respository containing the source code being deployed.
+    We can use this to link directly to your source code from the Bugsnag
+    dashboard. (Optional).
     
-    *Optional.*
+-   **branch**
+
+    The source control branch from which you are deploying the code.
+    (Optional). 
+
+-   **revision**
+
+    The source control (git, subversion, etc) revision id for the code you
+    are deploying. (Optional).
+
+-   **appVersion**
+
+    The app version of the code you are currently deploying. Only set this
+    if you tag your releases with [semantic version numbers](http://semver.org/)
+    and deploy infrequently. (Optional).    
 
 
 Example
