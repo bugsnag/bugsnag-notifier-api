@@ -1,18 +1,16 @@
 Bugsnag Deploy Tracking API
 ===========================
 
-The Bugsnag Deploy Tracking API allows you to track deploys of your apps
+The Bugsnag Deploy Tracking API allows you to track deploys of your apps.
 By sending the source revision or application version to bugsnag.com when
 you deploy a new version of your app, you'll be able to see which deploy each 
 error was introduced in.
 
 Our [official notifiers](https://bugsnag.com/docs/notifiers) will often 
 contain language or frameworks hooks to help you automate the deploy 
-notification process.
-
-If you are using a custom notifier, or your notifier does provide appropriate
-deploy tracking hooks, you can notify Bugsnag of deploys of your application
-using the deploy tracking API described in this document.
+notification process. If you are using a custom notifier, or your notifier 
+does provide appropriate deploy tracking hooks, you can notify Bugsnag of 
+deploys of your application using the deploy tracking API described here.
 
 [Bugsnag](http://bugsnag.com) captures errors in real-time from your web, 
 mobile and desktop applications, helping you to understand and resolve them 
@@ -23,8 +21,8 @@ capturing exceptions from your applications.
 API Overview
 ------------
 
-Bugsnag provides a simple JSON based API to notify us of deploys. Simply
-POST to [http://notify.bugsnag.com/deploy](http://notify.bugsnag.com/deploy)
+To notify Bugsnag of deploys, simply make a HTTP POST to
+[http://notify.bugsnag.com/deploy](http://notify.bugsnag.com/deploy)
 and Bugsnag will save and process the deploy information.
 
 The POST payload can either be normal form-encoded data, or a JSON object. If
