@@ -60,5 +60,5 @@ Example
 Notify Bugsnag of a deploy using `curl`:
 
 ```shell
-curl -d "apiKey=c9d60ae4c7e70c4b6c4eb&appVersion=1.5" https://notify.bugsnag.com/deploy
+curl -d "apiKey=c9d60ae4c7e70c4b6c4eb&appVersion=1.5" http://notify.bugsnag.com/deploy
 ```
