@@ -122,6 +122,14 @@ an application. All fields are required, unless otherwise stated.
         //   * In iOS, the context could be the name of the top most UIViewController
         context: "auth/session#create",
 
+        // All errors with the same groupingHash will be grouped together within
+        // the bugsnag dashboard. 
+        // This gives a notifier more control as to how grouping should be performed.
+        // We recommend including the errorClass of the exception in here so a different
+        // class of error will be grouped separately.
+        // (optional)
+        groupingHash: "buggy_file.rb",
+
         // An array of exceptions that occurred during this event. Most of the
         // time there will only be one exception, but some languages support 
         // "nested" or "caused by" exceptions. In this case, exceptions should 
@@ -152,6 +160,9 @@ an application. All fields are required, unless otherwise stated.
         
                 // The line of the file that this frame of the stack was in.
                 lineNumber: 1234,
+
+                // The column of the file that this frame of the stack was in.
+                columnNumber: 123,
         
                 // The method that this particular stack frame is within.
                 method: "create",
