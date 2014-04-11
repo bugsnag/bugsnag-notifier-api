@@ -102,7 +102,7 @@ an application. All fields are required, unless otherwise stated.
 
         // The version number of the payload. If not set to 2+, Severity will
         // not be supported.
-        // (optional, default none)
+        // (optional, default "1")
         payloadVersion: "2",
 
         // The severity of the error. This can be set to "error", "warning",
