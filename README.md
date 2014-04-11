@@ -108,7 +108,7 @@ an application. All fields are required, unless otherwise stated.
         // The severity of the error. This can be set to "error", "warning",
         // or "info".
         // (optional, default "error")
-        payloadVersion: "2",
+        severity: "error",
 
         // The operating system version of the client that the error was
         // generated on. (optional, default none)
