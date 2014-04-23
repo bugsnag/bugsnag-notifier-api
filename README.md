@@ -92,8 +92,8 @@ an application. All fields are required, unless otherwise stated.
     events: [{
 
         // A unique identifier for a user affected by this event. This could be
-        // any distinct identifier that makes sense for your application/platform.
-        // This field is optional but highly recommended.
+        // any distinct identifier that makes sense for your
+        // application/platform. This field is optional but highly recommended.
         userId: "snmaynard",
 
         // The version number of the application which generated the error.
@@ -115,9 +115,9 @@ an application. All fields are required, unless otherwise stated.
         osVersion: "2.1.1",
 
         // The release stage that this error occurred in, for example
-        // "development" or "production". This can be any string, but "production"
-        // will be highlighted differently in bugsnag in the future, so please use
-        // "production" appropriately.
+        // "development" or "production". This can be any string, but
+        // "production" will be highlighted differently in bugsnag in the
+        // future, so please use "production" appropriately.
         releaseStage: "production",
 
         // A string representing what was happening in the application at the
@@ -129,22 +129,23 @@ an application. All fields are required, unless otherwise stated.
         // For example,
         //   * On Ruby on Rails the context could be controller#action
         //   * In Android, the context could be the top most Activity.
-        //   * In iOS, the context could be the name of the top most UIViewController
+        //   * In iOS, the context could be the name of the top most
+        //     UIViewController
         context: "auth/session#create",
 
         // All errors with the same groupingHash will be grouped together within
         // the bugsnag dashboard.
-        // This gives a notifier more control as to how grouping should be performed.
-        // We recommend including the errorClass of the exception in here so a different
-        // class of error will be grouped separately.
+        // This gives a notifier more control as to how grouping should be
+        // performed. We recommend including the errorClass of the exception in
+        // here so a different class of error will be grouped separately.
         // (optional)
         groupingHash: "buggy_file.rb",
 
         // An array of exceptions that occurred during this event. Most of the
         // time there will only be one exception, but some languages support
         // "nested" or "caused by" exceptions. In this case, exceptions should
-        // be unwrapped and added to the array one at a time. The first exception
-        // raised should be first in this array.
+        // be unwrapped and added to the array one at a time. The first
+        // exception raised should be first in this array.
         exceptions: [{
 
             // The class of error that occurred. This field is used to group the
@@ -154,13 +155,14 @@ an application. All fields are required, unless otherwise stated.
             errorClass: "NoMethodError",
 
             // The error message associated with the error. Usually this will
-            // contain some information about this specific instance of the error
-            // and is not used to group the errors (optional, default none).
+            // contain some information about this specific instance of the
+            // error and is not used to group the errors (optional, default
+            // none).
             message: "Unable to connect to database.",
 
-            // An array of stacktrace objects. Each object represents one line in
-            // the exception's stacktrace. Bugsnag uses this information to help
-            // with error grouping, as well as displaying it to the user.
+            // An array of stacktrace objects. Each object represents one line
+            // in the exception's stacktrace. Bugsnag uses this information to
+            // help with error grouping, as well as displaying it to the user.
             stacktrace: [{
 
                 // The file that this stack frame was executing.
@@ -180,17 +182,19 @@ an application. All fields are required, unless otherwise stated.
                 // Is this stacktrace line is in the user's project code, set
                 // this to true. It is useful for developers to be able to see
                 // which lines of a stacktrace are within their own application,
-                // and which are within third party libraries. This boolean field
-                // allows Bugsnag to display this information in the stacktrace
-                // as well as use the information to help group errors better.
+                // and which are within third party libraries. This boolean
+                // field allows Bugsnag to display this information in the
+                // stacktrace as well as use the information to help group
+                // errors better.
                 // (Optional, defaults to false).
                 inProject: true
             }]
         }],
 
-        // An object containing any further data you wish to attach to this error
-        // event. This should contain one or more objects, with each object being
-        // displayed in its own tab on the event details on the Bugsnag website.
+        // An object containing any further data you wish to attach to this
+        // error event. This should contain one or more objects, with each
+        // object being displayed in its own tab on the event details on the
+        // Bugsnag website.
         // (Optional).
         metaData: {
 
