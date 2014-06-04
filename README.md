@@ -68,151 +68,43 @@ an application. All fields are required, unless otherwise stated.
 
 ```javascript
 {
-    // The API Key associated with the project. Informs Bugsnag which project
-    // has generated this error.
     apiKey: "c9d60ae4c7e70c4b6c4ebd3e8056d2b8",
-
-    // This object describes the notifier itself. These properties are used
-    // within Bugsnag to track error rates from a notifier.
     notifier: {
-
-        // The notifier name
         name: "Bugsnag Ruby",
-
-        // The notifier's current version
         version: "1.0.11",
-
-        // The URL associated with the notifier
         url: "https://github.com/bugsnag/bugsnag-ruby"
     },
 
-    // An array of error events that Bugsnag should be notified of. A notifier
-    // can choose to group notices into an array to minimize network traffic, or
-    // can notify Bugsnag each time an event occurs.
     events: [{
-
-        // A unique identifier for a user affected by this event. This could be
-        // any distinct identifier that makes sense for your
-        // application/platform. This field is optional but highly recommended.
         userId: "snmaynard",
-
-        // The version number of the application which generated the error.
-        // (optional, default none)
         appVersion: "1.1.3",
-
-        // The version number of the payload. If not set to 2+, Severity will
-        // not be supported.
-        // (optional, default "2")
         payloadVersion: "2",
-
-        // The severity of the error. This can be set to "error", "warning",
-        // or "info".
-        // (optional, default "error")
         severity: "error",
-
-        // The operating system version of the client that the error was
-        // generated on. (optional, default none)
         osVersion: "2.1.1",
-
-        // The release stage that this error occurred in, for example
-        // "development" or "production". This can be any string, but
-        // "production" will be highlighted differently in bugsnag in the
-        // future, so please use "production" appropriately.
         releaseStage: "production",
-
-        // A string representing what was happening in the application at the
-        // time of the error. This string could be used for grouping purposes,
-        // depending on the event.
-        // Usually this would represent the controller and action in a server
-        // based project. It could represent the screen that the user was
-        // interacting with in a client side project.
-        // For example,
-        //   * On Ruby on Rails the context could be controller#action
-        //   * In Android, the context could be the top most Activity.
-        //   * In iOS, the context could be the name of the top most
-        //     UIViewController
         context: "auth/session#create",
-
-        // All errors with the same groupingHash will be grouped together within
-        // the bugsnag dashboard.
-        // This gives a notifier more control as to how grouping should be
-        // performed. We recommend including the errorClass of the exception in
-        // here so a different class of error will be grouped separately.
-        // (optional)
         groupingHash: "buggy_file.rb",
 
-        // An array of exceptions that occurred during this event. Most of the
-        // time there will only be one exception, but some languages support
-        // "nested" or "caused by" exceptions. In this case, exceptions should
-        // be unwrapped and added to the array one at a time. The first
-        // exception raised should be first in this array.
         exceptions: [{
-
-            // The class of error that occurred. This field is used to group the
-            // errors together so should not contain any contextual information
-            // that would prevent correct grouping. This would ordinarily be the
-            // Exception name when dealing with an exception.
             errorClass: "NoMethodError",
-
-            // The error message associated with the error. Usually this will
-            // contain some information about this specific instance of the
-            // error and is not used to group the errors (optional, default
-            // none).
             message: "Unable to connect to database.",
-
-            // An array of stacktrace objects. Each object represents one line
-            // in the exception's stacktrace. Bugsnag uses this information to
-            // help with error grouping, as well as displaying it to the user.
             stacktrace: [{
-
-                // The file that this stack frame was executing.
-                // It is recommended that you strip any unnecessary or common
-                // information from the beginning of the path.
                 file: "controllers/auth/session_controller.rb",
-
-                // The line of the file that this frame of the stack was in.
                 lineNumber: 1234,
-
-                // The column of the file that this frame of the stack was in.
                 columnNumber: 123,
-
-                // The method that this particular stack frame is within.
                 method: "create",
-
-                // Is this stacktrace line is in the user's project code, set
-                // this to true. It is useful for developers to be able to see
-                // which lines of a stacktrace are within their own application,
-                // and which are within third party libraries. This boolean
-                // field allows Bugsnag to display this information in the
-                // stacktrace as well as use the information to help group
-                // errors better.
-                // (Optional, defaults to false).
                 inProject: true
             }]
         }],
 
-        // An object containing any further data you wish to attach to this
-        // error event. This should contain one or more objects, with each
-        // object being displayed in its own tab on the event details on the
-        // Bugsnag website.
-        // (Optional).
         metaData: {
-
-            // This will displayed as the first tab after the stacktrace on the
-            // Bugsnag website.
             someData: {
-
-                // A key value pair that will be displayed in the first tab
                 key: "value",
-
-                // This is shown as a section within the first tab
                 setOfKeys: {
                     key: "value",
                     key2: "value"
                 }
             },
-
-            // This would be the second tab on the Bugsnag website.
             someMoreData: {
                 ...
             }
@@ -221,74 +113,264 @@ an application. All fields are required, unless otherwise stated.
 }
 ```
 
+Payload Attributes
+------------------
 
-Notifier Configuration
-----------------------
+### apiKey
 
-When writing a notifier, you should consider providing methods to allow users
-to configure how errors are sent to bugsnag.
+The API Key associated with the project. Informs Bugsnag which project has generated this error.
 
-On our official notifiers, we provide the following interfaces:
+_required_
+```
+apiKey: "c9d60ae4c7e70c4b6c4ebd3e8056d2b8"
+```
 
-### Application Settings
+## Notifier Attributes
+This object describes the notifier itself. These properties are used within Bugsnag to track error rates from a notifier.
 
-Your Bugsnag notifier should allow users to set the following settings in
-their application.
+### name
 
--   **apiKey**
-
-    The apiKey for the project, this **must** be provided by the developer.
-    You should send this value in the [JSON Payload](#json-payload).
-
--   **releaseStage**
-
-    The current release stage for the application. Most platforms have a
-    sensible automatic way of obtaining this, for example `RAILS_ENV`
-    in rails apps, and this should be used if possible.
-    You should send this value in the [JSON Payload](#json-payload).
-
--   **notifyReleaseStages**
-
-    A list of release stages that the notifier will capture and send errors
-    for. If the current release stage is not in this list, errors should not
-    be sent to Bugsnag. This should default to notifying for the "production"
-    release stage only.
-
--   **autoNotify**
-
-    If this is true, the plugin should notify Bugsnag of any uncaught
-    exceptions (if possible). This should default to true.
-
--   **useSSL**
-
-    If this is true, the plugin should notify Bugsnag using SSL.
-    This should default to false.
+The notifier name.
+```
+name: "Bugsnag Ruby"
+```
 
 
-### Per-Session Settings
+### version
+The notifier's current version.
+```
+version: "1.0.11"
+```
 
-You should also allow developers to set the following settings on a *per-request*
-or *per-session* basis. These settings allow us to attach meta-data to each
-error:
+### url
+The URL associated with the notifier.
+```
+url: "https://github.com/bugsnag/bugsnag-ruby"
+```
 
--   **userId**
+## Events Attributes
 
-    An ID representing the current application's user. Many platforms have a
-    way to automatically fill this, for example `session` data in rails apps.
-    You could also generate a UUID and store this on the user's device or in
-    their session. Even if you automatically choose a userId, you should
-    still allow developers to set one themselves.
-    You should send this value in the [JSON Payload](#json-payload).
+An array of error events that Bugsnag should be notified of. A notifier can choose to group notices into an array to minimize network traffic, or can notify Bugsnag each time an event occurs.
 
--   **context**
+### userId
 
-    Allow the developer to set the context that is currently active in the
-    application. You should default this to something sensible for the
-    platform, for example "action#controller" in a rails app.
-    You should send this value in the [JSON Payload](#json-payload).
+A unique identifier for a user affected by this event. This could be any distinct identifier that makes sense for your application/platform.
 
--   **extraData**
+_optional (but highly recommended)_
+```
+userId: "snmaynard"
+```
 
-    Allow the developer to set any extra data that will be sent as meta-data
-    along with every error. You should send this value inside `metaData`
-    in the [JSON Payload](#json-payload).
+### appVersion
+
+The version number of the application which generated the error.
+
+_optional, default none_
+```
+appVersion: "1.1.3"
+```
+
+### payloadVersion
+
+The version number of the payload. If not set to 2+, Severity will not be supported.
+
+_optional, defaults to the latest version_
+```
+payloadVersion: "2"
+```
+
+### severity
+
+The severity of the error. This can be set to "error", "warning", or "info".
+
+_optional, defaults to "error"_
+```
+severity: "error"
+```
+
+### osVersion
+
+The operating system version of the client that the error was generated on.
+
+_optional, defaults to none_
+```
+osVersion: "2.1.1"
+```
+
+### releaseStage
+
+The release stage that this error occurred in, for example "development" or "production". This can be any string, but "production" will be highlighted differently in bugsnag in the future, so please use "production" appropriately.
+
+_optional, defaults to `"production"`_
+```
+release_stage: "production"
+```
+
+### context
+
+A string representing what was happening in the application at the time of the error. This string could be used for grouping purposes, depending on the event. Usually this would represent the controller and action in a model-view-controller project. It could represent the screen that the user was interacting with in a client side project.
+
+For example,
+* On Ruby on Rails the context could be controller#action
+* In Android, the context could be the top most Activity.
+* In iOS, the context could be the name of the top most UIViewController
+
+_optional_
+```
+context: "auth/session#create"
+```
+
+### groupingHash
+
+All errors with the same groupingHash will be grouped together within the bugsnag dashboard. This gives a notifier more control as to how grouping should beperformed. We recommend including the errorClass of the exception in here so a different class of error will be grouped separately.
+
+_optional_
+```
+groupingHash: "buggy_file.rb"
+```
+
+### metaData
+
+An object containing any further data you wish to attach to this error event. This should contain one or more objects, with each object being displayed in its own tab on the event details on the Bugsnag website.
+
+_optional_
+```javascript
+metaData: {
+    // This will displayed as the first tab after the stacktrace on the
+    // Bugsnag website.
+    someData: {
+
+        // A key value pair that will be displayed in the first tab
+        key: "value",
+
+        // This is shown as a section within the first tab
+        setOfKeys: {
+            key: "value",
+            key2: "value"
+        }
+    },
+
+    // This would be the second tab on the Bugsnag website.
+    someMoreData: {
+        ...
+    }
+}
+```
+
+
+## Exceptions Attributes
+
+An array of exceptions that occurred during this event. Most of the time there will only be one exception, but some languages support "nested" or "caused by" exceptions. In this case, exceptions should be unwrapped and added to the array one at a time. The first exception raised should be first in this array.
+
+### errorClass
+
+The class of error that occurred. This field is used to group the errors together so should not contain any contextual information that would prevent correct grouping. This would ordinarily be the Exception name when dealing with an exception.
+
+```
+errorClass: "NoMethodError"
+```
+
+### message
+
+The error message associated with the error. Usually this will contain some information about this specific instance of the error and is not used to group the errors.
+
+_optional, defaults to none_
+```
+message: "Unable to connect to database."
+```
+
+
+## Stacktrace Attributes
+
+An array of stacktrace objects. Each object represents one line in the exception's stacktrace. Bugsnag uses this information to help with error grouping, as well as displaying it to the user.
+
+### file
+
+The file that this stack frame was executing. It is recommended that you strip any unnecessary or common information from the beginning of the path.
+
+```
+file: "controllers/auth/session_controller.rb"
+```
+
+### lineNumber
+
+The line of the file that this frame of the stack was in.
+
+```
+lineNumber: 1234
+```
+
+### columnNumber
+
+The column of the file that this frame of the stack was in.
+
+```
+columnNumber: 123
+```
+
+### method
+
+The method that this particular stack frame is within.
+
+```
+method: "create"
+```
+
+### inProject
+
+Is this stacktrace line is in the user's project code, set this to true. It is useful for developers to be able to see which lines of a stacktrace are within their own application, and which are within third party libraries. This boolean field allows Bugsnag to display this information in the stacktrace as well as use the information to help group errors better.
+
+_optional, defaults to `false`_
+```
+inProject: true
+```
+
+Application Configuration
+-------------------------
+
+Your Bugsnag notifier should allow users to set the following configuration settings in their application.
+
+### apiKey
+
+The apiKey for the project, this must be provided by the developer. You should send this value in the JSON Payload. You should send this value in the [JSON Payload](#json-payload). See [apiKey](#apiKey) in the Payload Attributes section for more information on apiKey.
+
+### releaseStage
+
+The current release stage for the application. Most platforms have a sensible automatic way of obtaining this, for example `RAILS_ENV` in rails apps, and this should be used if possible. You should send this value in the [JSON Payload](#json-payload). See [releaseStage](#releaseStage) in the Payload Attributes section for more information on releaseStage.
+
+### notifyReleaseStages
+
+A list of release stages that the notifier will capture and send errors for. If the current release stage is not in this list, errors should not be sent to Bugsnag.
+
+_optional, should default to `["production"]`_
+
+### autoNotify
+
+If this is true, the plugin should notify Bugsnag of any uncaught exceptions (if possible).
+
+_optional, should default to `true`_
+
+### useSSL
+
+If this is true, the plugin should notify Bugsnag using SSL.
+
+_optional, should default to `false`_
+
+
+Per-Session Application Configuration
+-------------------------------------
+
+You should also allow developers to set the following settings on a *per-request* or *per-session* basis. These settings allow us to attach meta-data to each error:
+
+### userId
+
+An ID representing the current application's user. Many platforms have a way to automatically fill this, for example `session` data in rails apps. You could also generate a UUID and store this on the user's device or in their session. Even if you automatically choose a userId, you should still allow developers to set one themselves. You should send this value in the [JSON Payload](#json-payload). See [userId](#userId) in the Payload Attributes section for more information on userId.
+
+### context
+
+Allow the developer to set the context that is currently active in the application. You should default this to something sensible for the platform, for example "action#controller" in a Rails app. You should send this value in the [JSON Payload](#json-payload). See [context](#context) in the Payload Attributes section for more information on context.
+
+### metaData
+
+Allow the developer to set any extra data that will be sent as meta-data along with every error. You should send this value inside `metaData` in the [JSON Payload](#json-payload). See [metaData](#metaData) in the Payload Attributes section for more information on metaData.
+
