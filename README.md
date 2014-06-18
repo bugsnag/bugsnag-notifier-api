@@ -291,12 +291,13 @@ You should also allow developers to set the following settings on a *per-request
 or *per-session* basis. These settings allow us to attach meta-data to each
 error:
 
--   **userId**
+-   **user**
 
-    An ID representing the current application's user. Many platforms have a
-    way to automatically fill this, for example `session` data in rails apps.
+    An object representing the current application's user, which can include ID,
+    email address, and username. Many platforms have a way to automatically fill
+    this, for example `session` data in rails apps.
     You could also generate a UUID and store this on the user's device or in
-    their session. Even if you automatically choose a userId, you should
+    their session. Even if you automatically choose a user.id, you should
     still allow developers to set one themselves.
     You should send this value in the [JSON Payload](#json-payload).
 
@@ -307,7 +308,7 @@ error:
     platform, for example "action#controller" in a rails app.
     You should send this value in the [JSON Payload](#json-payload).
 
--   **extraData**
+-   **metaData**
 
     Allow the developer to set any extra data that will be sent as meta-data
     along with every error. You should send this value inside `metaData`
