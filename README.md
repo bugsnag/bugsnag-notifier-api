@@ -272,8 +272,7 @@ their application.
 
     A list of release stages that the notifier will capture and send errors
     for. If the current release stage is not in this list, errors should not
-    be sent to Bugsnag. This should default to notifying for the "production"
-    release stage only.
+    be sent to Bugsnag.
 
 -   **autoNotify**
 
@@ -283,7 +282,7 @@ their application.
 -   **useSSL**
 
     If this is true, the plugin should notify Bugsnag using SSL.
-    This should default to false.
+    This should default to true.
 
 
 ### Per-Session Settings
