@@ -43,7 +43,7 @@ codes:
 
 -   **400 (Bad Request)**
 
-    The payload was too large (>500mb) or took too long (>10s) to read from the network.
+    The payload was too large or took too long (>10s) to read from the network.
 
 JSON Payload
 ------------
