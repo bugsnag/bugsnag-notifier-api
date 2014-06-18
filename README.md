@@ -4,7 +4,7 @@ Bugsnag Notifier API
 The Bugsnag Notifier API can be used to notify Bugsnag of an error or
 exception in web, mobile or desktop applications.
 [Official notifiers](https://bugsnag.com/docs/notifiers) are available
-for several languages and frameworks.
+for many languages and frameworks.
 
 If there is no notifier available for the language or framework you are using,
 then why not write one yourself? Email us at
@@ -22,49 +22,37 @@ API Overview
 ------------
 
 Bugsnag provides a simple JSON based API to notify us of errors. Simply
-POST the [JSON Payload](#json-payload) to [http://notify.bugsnag.com](http://notify.bugsnag.com)
+POST the [JSON Payload](#json-payload) to [https://notify.bugsnag.com](https://notify.bugsnag.com)
 and Bugsnag will process the error.
 
-It is recommended you make it possible to post errors over HTTPS, in which case
-you should POST to [https://notify.bugsnag.com](https://notify.bugsnag.com).
+If for some reason you cannot make HTTPS requests, you can use the non-https URL
+[http://notify.bugsnag.com](http://notify.bugsnag.com)
 
 Make sure you set the HTTP `Content-Type` header to be `application/json`.
-
 
 Response Codes
 --------------
 
-We use standard HTTP response codes to let you know if your JSON Payload was
-processed sucessfully. For non-200 response codes, we will also include a JSON
-response with details of any error that occurred. Bugsnag will send one of the
-following response code:
+Bugsnag doesn't parse or analyze requests synchronously, so we only use two response
+codes:
 
 -   **200 (OK)**
 
-    The error validated and will be processed.
+    The payload was accepted and will be processed asynchronously. This doesn't imply
+    that your payload was valid, just that it was enqueued to be processed.
 
 -   **400 (Bad Request)**
 
-    The payload failed syntax validation and was not processed.
-
--   **401 (Unauthorized)**
-
-    Indicates that the API Key was incorrect.
-
--   **413 (Request Too Large)**
-
-    Indicates that the payload was too large to be processed.
-
--   **429 (Too Many Requests)**
-
-    Indicates that the payload was not processed due to rate limiting.
-
+    The payload was too large (>500mb) or took too long (>10s) to read from the network.
 
 JSON Payload
 ------------
 
 Here is the JSON payload for a notice to Bugsnag that an error has occurred in
 an application. All fields are required, unless otherwise stated.
+
+Fields marked as searchable can be searched from the Bugsnag dashboard, and those
+marked as filtered are available for filtering.
 
 ```javascript
 {
@@ -91,55 +79,10 @@ an application. All fields are required, unless otherwise stated.
     // can notify Bugsnag each time an event occurs.
     events: [{
 
-        // A unique identifier for a user affected by this event. This could be
-        // any distinct identifier that makes sense for your
-        // application/platform. This field is optional but highly recommended.
-        userId: "snmaynard",
-
-        // The version number of the application which generated the error.
-        // (optional, default none)
-        appVersion: "1.1.3",
-
         // The version number of the payload. If not set to 2+, Severity will
         // not be supported.
-        // (optional, default "2")
+        // (required, must be set to "2")
         payloadVersion: "2",
-
-        // The severity of the error. This can be set to "error", "warning",
-        // or "info".
-        // (optional, default "error")
-        severity: "error",
-
-        // The operating system version of the client that the error was
-        // generated on. (optional, default none)
-        osVersion: "2.1.1",
-
-        // The release stage that this error occurred in, for example
-        // "development" or "production". This can be any string, but
-        // "production" will be highlighted differently in bugsnag in the
-        // future, so please use "production" appropriately.
-        releaseStage: "production",
-
-        // A string representing what was happening in the application at the
-        // time of the error. This string could be used for grouping purposes,
-        // depending on the event.
-        // Usually this would represent the controller and action in a server
-        // based project. It could represent the screen that the user was
-        // interacting with in a client side project.
-        // For example,
-        //   * On Ruby on Rails the context could be controller#action
-        //   * In Android, the context could be the top most Activity.
-        //   * In iOS, the context could be the name of the top most
-        //     UIViewController
-        context: "auth/session#create",
-
-        // All errors with the same groupingHash will be grouped together within
-        // the bugsnag dashboard.
-        // This gives a notifier more control as to how grouping should be
-        // performed. We recommend including the errorClass of the exception in
-        // here so a different class of error will be grouped separately.
-        // (optional)
-        groupingHash: "buggy_file.rb",
 
         // An array of exceptions that occurred during this event. Most of the
         // time there will only be one exception, but some languages support
@@ -152,12 +95,13 @@ an application. All fields are required, unless otherwise stated.
             // errors together so should not contain any contextual information
             // that would prevent correct grouping. This would ordinarily be the
             // Exception name when dealing with an exception.
+            // (searchable)
             errorClass: "NoMethodError",
 
             // The error message associated with the error. Usually this will
             // contain some information about this specific instance of the
             // error and is not used to group the errors (optional, default
-            // none).
+            // none). (searchable)
             message: "Unable to connect to database.",
 
             // An array of stacktrace objects. Each object represents one line
@@ -174,6 +118,7 @@ an application. All fields are required, unless otherwise stated.
                 lineNumber: 1234,
 
                 // The column of the file that this frame of the stack was in.
+                // (optional)
                 columnNumber: 123,
 
                 // The method that this particular stack frame is within.
@@ -190,6 +135,82 @@ an application. All fields are required, unless otherwise stated.
                 inProject: true
             }]
         }],
+
+        // A string representing what was happening in the application at the
+        // time of the error. This string could be used for grouping purposes,
+        // depending on the event.
+        // Usually this would represent the controller and action in a server
+        // based project. It could represent the screen that the user was
+        // interacting with in a client side project.
+        // For example,
+        //   * On Ruby on Rails the context could be controller#action
+        //   * In Android, the context could be the top most Activity.
+        //   * In iOS, the context could be the name of the top most
+        //     UIViewController
+        // (optional, searchable)
+        context: "auth/session#create",
+
+        // All errors with the same groupingHash will be grouped together within
+        // the bugsnag dashboard.
+        // This gives a notifier more control as to how grouping should be
+        // performed. We recommend including the errorClass of the exception in
+        // here so a different class of error will be grouped separately.
+        // (optional)
+        groupingHash: "buggy_file.rb",
+
+        // The severity of the error. This can be set to:
+        // - "error"   used when the app crashes
+        // - "warning" used when Bugsnag.notify is called
+        // - "info"    can be used in manual Bugsnag.notify calls
+        // (optional, default "error", filtered)
+        severity: "error",
+
+        // Information about the user affected by the crash.
+        // These fields are optional but highly recommended.
+        user: {
+
+            // A unique identifier for a user affected by this event. This could
+            // be any distinct identifier that makes sense for your
+            // application/platform.
+            // (optional, searchable)
+            id: "19",
+
+            // The user's name, or a string you use to identify them.
+            // (optional, searchable)
+            name: "Simon Maynard",
+
+            // The user's email address.
+            // (optional, searchable)
+            email: "simon@bugsnag.com"
+        },
+
+        // Information about the app that crashed.
+        // These fields are optional but highly recommended
+        app: {
+          // The version number of the application which generated the error.
+          // If appVersion is set and an error is resolved in the dashboard
+          // the error will not unresolve until a crash is seen in a newer
+          // version of the app.
+          // (optional, default none, filtered)
+          version: "1.1.3",
+
+          // The release stage that this error occurred in, for example
+          // "development", "staging" or "production".
+          // (optional, default "production", filtered)
+          releaseStage: "production",
+        },
+
+        // Information about the computer/device running the app
+        // These fields are optional but highly recommended
+        device: {
+          // The operating system version of the client that the error was
+          // generated on. (optional, default none)
+          osVersion: "2.1.1",
+
+          // The hostname of the server running your code
+          // (optional, default none)
+          hostname: "web1.internal"
+        }
 
         // An object containing any further data you wish to attach to this
         // error event. This should contain one or more objects, with each
