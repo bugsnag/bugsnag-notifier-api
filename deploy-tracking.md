@@ -43,7 +43,7 @@ You can post the following fields when notifying Bugsnag of a deploy:
 
 -   **repository**
 
-    The url to the respository containing the source code being deployed.
+    The url to the repository containing the source code being deployed.
     We can use this to link directly to your source code from the Bugsnag
     dashboard. (Optional).
 
@@ -73,4 +73,4 @@ Notify Bugsnag of a deploy using `curl`:
 curl -d "apiKey=YOUR_API_KEY_HERE&appVersion=1.5" http://notify.bugsnag.com/deploy
 ```
 
-> Note: To configure deploy tracking for your project, replace the example text with your project's API token, found on its project settings page.
+> Note: To configure deploy tracking, replace the example text with your project's API token, found on its project settings page.
