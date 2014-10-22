@@ -136,6 +136,27 @@ marked as filtered are available for filtering.
             }]
         }],
 
+        // An array of background threads.
+        // This is optional but recommended for apps that rely heavily on threading.
+        // Threads should be in an order that makes sense for your application.
+        // (optional)
+        threads: [{
+            // The id of the thread in your application.
+            // (optional)
+            id: "thread_id",
+
+            // A human readable name for the thread.
+            // (optional)
+            name: "thread_name",
+
+            // An array of stacktrace objects. Each object represents one line
+            // in the stacktrace of the thread at the point your program crashed.
+            stacktrace: [{
+                // This object has the same format as the stacktrace object on exceptions.
+            }]
+
+        }],
+
         // A string representing what was happening in the application at the
         // time of the error. This string could be used for grouping purposes,
         // depending on the event.
