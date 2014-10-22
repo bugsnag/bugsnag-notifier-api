@@ -25,9 +25,8 @@ To notify Bugsnag of deploys, simply make a HTTP POST to
 [http://notify.bugsnag.com/deploy](http://notify.bugsnag.com/deploy)
 and Bugsnag will save and process the deploy information.
 
-The POST payload can either be normal form-encoded data, or a JSON object. If
-you choose to POST a JSON object, make sure you set the HTTP `Content-Type`
-header to be `application/json`.
+The POST payload should be form encoded and have the content type
+`application/x-www-form-urlencoded`.
 
 You can post the following fields when notifying Bugsnag of a deploy:
 
