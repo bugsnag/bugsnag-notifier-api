@@ -19,7 +19,7 @@ Contents
 - [Curl Example](#curl-example)
 - [Capistrano Integration](#capistrano-integration)
 - [Rake Integration](#rake-integration)
-- [Heroku Deploy Hooks](#heroku-deploy-hook)
+- [Heroku Deploy Hook](#heroku-deploy-hook)
 
 
 API Overview
