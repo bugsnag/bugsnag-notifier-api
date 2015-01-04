@@ -95,8 +95,8 @@ Rake Integration
 See the [bugsnag-ruby docs](https://bugsnag.com/docs/notifiers/ruby#using-rake) for how to track deploys from your Rake tasks.
 
 
-Heroku Deploy Hooks
--------------------
+Heroku Deploy Hook
+------------------
 
 If you are using Bugnag with a ruby application on Heroku, you can use our rake rask to quickly add a deploy hook:
 
