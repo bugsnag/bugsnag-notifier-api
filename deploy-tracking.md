@@ -2,25 +2,32 @@ Bugsnag Deploy Tracking API
 ===========================
 
 The Bugsnag Deploy Tracking API allows you to track deploys of your apps.
-By sending the source revision or application version to bugsnag.com when
+By sending the source revision or application version when
 you deploy a new version of your app, you'll be able to see which deploy each
 error was introduced in.
 
-Our [official notifiers](https://bugsnag.com/docs/notifiers) will often
-contain language or frameworks hooks to help you automate the deploy
-notification process. If you are using a custom notifier, or your notifier
-does provide appropriate deploy tracking hooks, you can notify Bugsnag of
-deploys of your application using the deploy tracking API described here.
+[Bugsnag](https://bugsnag.com) automatically detects errors in your web,
+mobile and desktop applications, collecting diagnostic information and immediately notifying your development team.
 
-[Bugsnag](http://bugsnag.com) captures errors in real-time from your web,
-mobile and desktop applications, helping you to understand and resolve them
-as fast as possible. [Create a free account](http://bugsnag.com) to start
+[Create a free account](https://bugsnag.com) to start
 capturing exceptions from your applications.
+
+Contents
+--------
+
+- [API Overview](#api-overview)
+- [Curl Example](#curl-example)
+- [Capistrano Integration](#capistrano-integration)
+- [Rake Integration](#rake-integration)
+- [Heroku Deploy Hooks](#heroku-deploy-hook)
 
 
 API Overview
 ------------
 
+If you are using a custom notifier, or your notifier
+does provide appropriate deploy tracking hooks, you can notify Bugsnag of
+deploys of your application using the deploy tracking API described here.
 To notify Bugsnag of deploys, simply make a HTTP POST to
 [http://notify.bugsnag.com/deploy](http://notify.bugsnag.com/deploy)
 and Bugsnag will save and process the deploy information.
@@ -64,8 +71,8 @@ You can post the following fields when notifying Bugsnag of a deploy:
     and deploy infrequently. (Optional).
 
 
-Example
--------
+Curl Example
+------------
 
 Notify Bugsnag of a deploy using `curl`:
 
@@ -74,3 +81,37 @@ curl -d "apiKey=YOUR_API_KEY_HERE&appVersion=1.5" http://notify.bugsnag.com/depl
 ```
 
 > Note: To configure deploy tracking, replace the example text with your project's API token, found on its project settings page.
+
+
+Capistrano Integration
+----------------------
+
+See the [bugsnag-ruby docs](https://bugsnag.com/docs/notifiers/ruby#using-capistrano) for how to track deploys with Capistrano.
+
+
+Rake Integration
+----------------
+
+See the [bugsnag-ruby docs](https://bugsnag.com/docs/notifiers/ruby#using-rake) for how to track deploys from your Rake tasks.
+
+
+Heroku Deploy Hooks
+-------------------
+
+If you are using Bugnag with a ruby application on Heroku, you can use our rake rask to quickly add a deploy hook:
+
+```
+$ rake bugsnag:heroku:add_deploy_hook
+```
+
+For other types of Heroku application, you can run the following command to add a Heroku deploy hook:
+
+```
+$ heroku addons:add deployhooks:http --url="https://notify.bugsnag.com/deploy?\
+    apiKey=YOUR_API_KEY_HERE&\
+    revision={{head_long}}&\
+    releaseStage=YOUR_RELEASE_STAGE&\
+    repo=YOUR_GITHUB_REPO"
+```
+
+> Note: Replace the example text with your project's API token, found on its project settings page.
