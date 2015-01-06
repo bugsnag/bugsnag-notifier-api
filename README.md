@@ -132,7 +132,22 @@ marked as filtered are available for filtering.
                 // stacktrace as well as use the information to help group
                 // errors better.
                 // (Optional, defaults to false).
-                inProject: true
+                inProject: true,
+
+                // The code in this file surrounding this line. You can include
+                // up to three lines on either side of the line that crashed.
+                // These will be displayed on the bugsnag dashboard when you expand
+                // that line.
+                // (optional)
+                code: {
+                    1231: "  def a",
+                    1232: "",
+                    1233: "    if problem?",
+                    1234: "      raise 'something went wrong'",
+                    1235: "    end"
+                    1236: "",
+                    1237: "  end"
+                }
             }]
         }],
 
