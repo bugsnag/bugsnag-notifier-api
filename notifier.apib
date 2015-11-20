@@ -1,0 +1,57 @@
+FORMAT: 1A
+HOST: https://notify.bugsnag.com
+
+# Notifier API
+
+The Bugsnag Notifier API can be used to notify Bugsnag of an error or
+exception in web, mobile or desktop applications.
+[Official notifiers](https://bugsnag.com/docs/notifiers) are available
+for many languages and frameworks.
+
+If there is no notifier available for the language or framework you are using,
+then why not write one yourself? Email us at
+[notifiers@bugsnag.com](mailto:notifiers@bugsnag.com) to let us know about
+your new notifier, and we will make it available to other Bugsnag users. We
+will even give you special Bugsnag perks to say thank you!
+
+[Bugsnag](http://bugsnag.com) captures errors in real-time from your web,
+mobile and desktop applications, helping you to understand and resolve them
+as fast as possible. [Create a free account](http://bugsnag.com) to start
+capturing exceptions from your applications.
+
+## Notify [/]
+
+The endpoint for sending error reports to Bugsnag.
+
+Bugsnag does not parse or analyze requests synchronously, so there are only two
+possible responses. A response code of `200` indicates that the payload was
+accepted and is queued to be processed. Response code `400` indicates that the
+payload was too large or took too long to process, where too long is 10 seconds
+or more.
+
+### Send error reports [POST]
+
++ Request (application/json)
+    + Attributes
+        + apiKey: `c9d60ae4c7e70c4b6c4ebd3e8056d2b8` (required, string) - The API Key associated with the project. Informs Bugsnag which project has generated this error
+        + notifier (required, object) - The notifier sending this payload. Used within Bugsnag to track error rates.
+            + name: `Bugsnag Ruby` (required, string) - The name of the notifier
+            + version: `1.0.11` (required, string) - The notifier's current version
+            + url: `https://github.com/bugsnag/bugsnag-ruby` - The notifier's homepage
+        + events (required, array[Event]) - The error events of which Bugsnag should be notified. A notifier can choose to group notices into an array to minimize network traffic or send reports individually.
+
++ Response 200 (application/json)
+
++ Response 400 (application/json)
+
+## Data Structures
+
+### Event
+
++ payloadVersion: `2` (required, number) - The version number of the payload. If less than 2, then the "severity" attribute will not be supported.
++ exceptions (required, array[Exception]) - An array of exceptions which occurred during this event. Most of the time, there will only be one exception, but some languages support "nested" or "caused by" exceptions. In this case, exceptions should be unwrapped and added to the array one at a time. The first exception raised should be first in this array.
+
+### Exception
+
++ errorClass: `NoMethodError` (required, string) - The class of error which occurred. This field is used to group errors together should it should not contain any contextual information which would prevent correct grouping. Ordinarily this is the exception name. (Searchable)
++ message: `Unable to connect to database` (optional, string) - The error message associated with the error. (Searchable)
