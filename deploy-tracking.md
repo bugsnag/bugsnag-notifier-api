@@ -77,7 +77,7 @@ Curl Example
 Notify Bugsnag of a deploy using `curl`:
 
 ```shell
-curl -d "apiKey=YOUR_API_KEY_HERE&appVersion=1.5" http://notify.bugsnag.com/deploy
+curl -d "apiKey=YOUR_API_KEY_HERE&appVersion=1.5" https://notify.bugsnag.com/deploy
 ```
 
 > Note: To configure deploy tracking, replace the example text with your project's API token, found on its project settings page.
