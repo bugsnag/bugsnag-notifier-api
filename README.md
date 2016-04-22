@@ -33,7 +33,7 @@ Make sure you set the HTTP `Content-Type` header to be `application/json`.
 Response Codes
 --------------
 
-Bugsnag doesn't parse or analyze requests synchronously, so we only use two response
+Bugsnag doesn't parse or analyze requests synchronously, so we only use three response
 codes:
 
 -   **200 (OK)**
@@ -43,7 +43,11 @@ codes:
 
 -   **400 (Bad Request)**
 
-    The payload was too large or took too long (>10s) to read from the network.
+    The payload was empty or too large.
+
+-   **408 (Request Timeout)**
+
+    The payload took too long (>30s) to read from the network.
 
 JSON Payload
 ------------
