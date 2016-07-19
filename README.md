@@ -85,8 +85,8 @@ marked as filtered are available for filtering.
 
         // The version number of the payload. If not set to 2+, Severity will
         // not be supported.
-        // (required, must be set to "2")
-        payloadVersion: "2",
+        // If not set to 3+, breadcrumbs will not be supported.
+        payloadVersion: "3",
 
         // An array of exceptions that occurred during this event. Most of the
         // time there will only be one exception, but some languages support
