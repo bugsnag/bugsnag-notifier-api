@@ -85,8 +85,8 @@ marked as filtered are available for filtering.
 
         // The version number of the payload. If not set to 2+, Severity will
         // not be supported.
-        // (required, must be set to "2")
-        payloadVersion: "2",
+        // If not set to 3+, breadcrumbs will not be supported.
+        payloadVersion: "3",
 
         // An array of exceptions that occurred during this event. Most of the
         // time there will only be one exception, but some languages support
@@ -250,7 +250,24 @@ marked as filtered are available for filtering.
           // The hostname of the server running your code
           // (optional, default none)
           hostname: "web1.internal"
-        }
+        },
+
+        // User actions or application events leading up to the crash
+        // Optional
+        breadcrumbs: [{
+            // The type of event. Valid values are: manual, error, log,
+            // navigation, process, request, state, and user. Required.
+            type: "navigation",
+            // A short label for the event. Required.
+            name: "Opened Pause Menu",
+            // The event time. Required.
+            timestamp: "2016-07-19T12:17:27-0700",
+            // Any further data relevant to the event. Optional.
+            metaData: {
+                from: "Starbase 2"
+                to: "Game Options"
+            }
+        }],
 
         // An object containing any further data you wish to attach to this
         // error event. This should contain one or more objects, with each
