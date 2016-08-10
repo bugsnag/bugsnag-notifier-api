@@ -18,7 +18,7 @@ capturing exceptions from your applications.
 The endpoint for sending error reports to Bugsnag.
 
 Bugsnag does not parse or analyze requests synchronously, so there are only two
-possible responses. A response code of `200` indicates that the payload was
+possible responses. A response code of `201` indicates that the payload was
 accepted and is queued to be processed. Response code `400` indicates that the
 payload was empty or too large, and `408` indicates that the payload took too
 long to read from the network (30 seconds or more).
@@ -26,17 +26,18 @@ long to read from the network (30 seconds or more).
 ### Send error reports [POST]
 
 + Request (application/json)
-    + Attributes
-        + apiKey: `c9d60ae4c7e70c4b6c4ebd3e8056d2b8` (required, string) - The
-          API Key associated with the project. Informs Bugsnag which project has
-          generated this error
-        + notifier (required, Notifier) - The notifier sending this payload.
-          Used within Bugsnag to track error rates.
-        + events (required, array[Event]) - The error events of which Bugsnag
-          should be notified. A notifier can choose to group notices into an
-          array to minimize network traffic or send reports individually.
+    + Headers
 
-+ Response 200 (application/json)
+            API-Key: YOUR-UPLOAD-API-KEY
+            Payload-Version: 4
+            User-Agent: Bugsnag Ruby/3.1.10 (https://github.com/bugsnag/bugsnag-ruby)
+
+    + Attributes (array[Error Report])
+       The error reports of which Bugsnag should be notified. A notifier can
+       choose to group reports into an array to minimize network traffic or send
+       reports individually.
+
++ Response 201 (application/json)
 
 + Response 400 (application/json)
 
@@ -56,6 +57,9 @@ long to read from the network (30 seconds or more).
 + releaseStage: `staging` (string)
     The release cycle stage in which the error occurred, such as "production",
     "development", or "beta"
++ dsymUUID: `e6173678256785afd940392abee`
+    The UUID of the [debug symbols file](http://lldb.llvm.org/symbols.html)
+    corresponding to this application, if any
 
 ### Breadcrumb
 
@@ -99,16 +103,13 @@ long to read from the network (30 seconds or more).
     The timezone used the device's system clock
 + totalMemory: `8967937230` (number)
     The number of bytes on the drive running the application
-
-### DeviceState
-
 + freeMemory: `2389234789` (number)
     The number of unused bytes on the drive running the application
 + time: `2016-08-04T20:00:46Z` (string)
     The time at which the error occurred, in
     [ISO 8601 format](https://tools.ietf.org/html/rfc3339#section-5.8)
 
-### Event
+### Error Report
 
 + app (Application)
     Information about the running app which had the error.
@@ -117,10 +118,7 @@ long to read from the network (30 seconds or more).
 + context: `auth/session#create` (string)
     What was happening in the application at the time of the error
 + device (Device)
-    Static information about the host device running the erroring application.
-+ deviceState (DeviceState)
-    Transient information about the host device running the erroring
-    application.
+    Information about the host device running the erroring application.
 + exceptions (required, array[Exception])
     An array of exceptions which occurred during this event. Most of the time,
     there will only be one exception, but some languages support "nested" or
@@ -129,14 +127,8 @@ long to read from the network (30 seconds or more).
     in this array.
 + groupingHash: `IOError:buggy_file.rs:42` (string)
     All errors with the same hash are grouped together within Bugsnag
-+ metaData (Metadata)
-    An object containing any further data you wish to attach to this
-    error event. This should contain one or more objects, with each
-    object being displayed in its own tab on the event details on Bugsnag.
-+ payloadVersion: `3` (required, number)
-    The version number of the payload.
-    If less than 2, then the "severity" attribute will not be supported.
-    If less than 3, then detailed breadcrumbs will not be supported.
++ request (Request)
+    The web request, if relevant
 + threads (array[Thread])
     An array of background threads.
     This is optional but recommended for apps that rely heavily on threading.
@@ -146,33 +138,33 @@ long to read from the network (30 seconds or more).
     + info
     + warning
     + error
-+ dsymUUID: `e6173678256785afd940392abee`
-    The dSYM UUID corresponding to this event
 + user (User)
     Information about the user affected by the error.
++ customDiagnostics (object)
+    An object containing any further data you wish to attach to this
+    error event. This should contain one or more objects, with each
+    object being displayed in its own section on the event details on Bugsnag.
+
+    ```
+    {
+      "account": {
+        "paying": true,
+        "users": 5,
+        "ownerId": "owner@example.com"
+      }
+    }
+    ```
+
 
 ### Exception
 
-+ errorClass: `NoMethodError` (required, string)
++ name: `NoMethodError` (required, string)
     The class of error which occurred. This field is used to group errors
     together should it should not contain any contextual information which would
     prevent correct grouping. Ordinarily this is the exception name.
 + message: `Unable to connect to database` (string)
     The error message associated with the error.
 + stacktrace (array[Stackframe])
-
-### Metadata
-
-+ request (Request)
-
-### Notifier
-
-+ name: `Bugsnag Ruby` (required, string)
-    The name of the notifier
-+ version: `1.0.11` (required, string)
-    The notifier's current version
-+ url: `https://github.com/bugsnag/bugsnag-ruby`
-    The notifier's homepage
 
 ### Request
 
@@ -189,9 +181,9 @@ long to read from the network (30 seconds or more).
     }
     ```
 
-+ httpMethod: `PUT` (string)
++ method: `PUT` (string)
     The HTTP method used
-+ url: `https://example.com/some/service` (string)
++ url (URL)
     The URL of the request
 + params (object)
     Parameters sent with the request
@@ -258,6 +250,30 @@ long to read from the network (30 seconds or more).
     A human readable name for the thread
 + stacktrace (array[Stackframe])
 
+### URL
+
++ protocol: `http` (string)
+    [The application protocol](https://tools.ietf.org/html/rfc1123)
++ host: `example.com` (string)
+    The connected device
++ path: `/users/19/settings` (string)
+    The hierarchical segment sequence
++ port: `80` (string)
+    Port number
++ query (object)
+    Key/value pairs representing query components. Keys with multiple
+    values are converted into an array.
+
+    ```
+    {
+        "key": "value",
+        "key2": ["value1", "value2"]
+    }
+    ```
+
++ fragment: `heading` (string)
+    The [fragment identifier](https://en.wikipedia.org/wiki/Fragment_identifier)
+
 ### User
 
 + id: `19` (string)
@@ -266,3 +282,4 @@ long to read from the network (30 seconds or more).
     The user's name
 + email: `bob@example.com` (string)
     The user's email
+
